@@ -1,0 +1,134 @@
+{
+  "experiment": "Gate 10B P-KAS unlabeled transition-stream decoding",
+  "execution_note": "Five local seeds using the committed Gate-10B protocol. Ground-truth labels/constants were retained only for post-hoc scoring.",
+  "decoder_access": "phase_before/after, W_before/after, dt only; no operation label, no changed pair, no growth target relation",
+  "stream_size_per_seed": {
+    "phase_only_truth": 700,
+    "pair_growth_truth": 900,
+    "global_prune_truth": 500,
+    "total": 2100
+  },
+  "ground_truth_for_posthoc_scoring_only": {
+    "coupling_gain": 0.87,
+    "noise_width": 0.03,
+    "growth_amplitude": 0.045,
+    "growth_width_over_pi": 0.3,
+    "growth_target_modes": [
+      0.1,
+      1.5707963267948966,
+      2.0943951023931953
+    ],
+    "prune_rate": 0.005,
+    "prune_threshold": 0.005
+  },
+  "summary": {
+    "regime_discovery_accuracy": {
+      "values": [1.0, 1.0, 1.0, 1.0, 1.0],
+      "mean": 1.0
+    },
+    "phase_coupling_gain_hat": {
+      "values": [
+        0.869678354188229,
+        0.8697006435600133,
+        0.8698077232909868,
+        0.8697599919888269,
+        0.8694946353788041
+      ],
+      "mean": 0.869688269681372,
+      "std": 0.00010691952791188765
+    },
+    "phase_noise_width_hat": {
+      "values": [
+        0.029928055720286853,
+        0.030022377122205936,
+        0.029978051483564503,
+        0.030049566375427023,
+        0.029808611519814707
+      ],
+      "mean": 0.029957332444259806,
+      "std": 0.00008502026430419677
+    },
+    "phase_model_r2": {
+      "values": [
+        0.9980689404739936,
+        0.9980772240251615,
+        0.9980541343424183,
+        0.9981205261751953,
+        0.9981742468958954
+      ],
+      "mean": 0.9980990143825329,
+      "std": 0.00004362606088172039
+    },
+    "growth_target_mode_count": {
+      "values": [3, 3, 3, 3, 3]
+    },
+    "growth_target_modes_hat": [
+      [0.10000000000036494, 1.5707963267950584, 2.0943951023932597],
+      [0.10000000000454637, 1.5707963267905674, 2.094395102389753],
+      [0.10000000086491355, 1.5707963268102874, 2.0943951023978618],
+      [0.10000000000002367, 1.570796326794873, 2.0943951023931744],
+      [0.1000000000000002, 1.5707963267948968, 2.0943951023931957]
+    ],
+    "growth_amplitude_hat": {
+      "values": [
+        0.04500000000000046,
+        0.045000000000004,
+        0.04499999999848006,
+        0.045000000000000026,
+        0.045000000000000005
+      ],
+      "mean": 0.04499999999969691
+    },
+    "growth_width_over_pi_hat": {
+      "values": [
+        0.29999999999958976,
+        0.29999999999186755,
+        0.2999999999054507,
+        0.2999999999999629,
+        0.2999999999999998
+      ],
+      "mean": 0.29999999997937415
+    },
+    "growth_log_gaussian_fit_r2": {
+      "values": [1.0, 1.0, 1.0, 1.0, 1.0],
+      "mean": 1.0
+    },
+    "symmetric_pair_update_seeds": 5,
+    "prune_rate_hat": {
+      "values": [
+        0.0050000000000000044,
+        0.0050000000000000044,
+        0.0050000000000000044,
+        0.0050000000000000044,
+        0.0050000000000000044
+      ],
+      "mean": 0.0050000000000000044
+    },
+    "prune_threshold_hat": {
+      "values": [
+        0.005000006264952363,
+        0.004999892388660592,
+        0.004999777272192472,
+        0.004999883889302989,
+        0.0049997196668191395
+      ],
+      "mean": 0.004999855896385512,
+      "std": 0.00000009946482187342208
+    }
+  },
+  "decoded_regime_atlas": {
+    "phase_only": "phases change while W is invariant",
+    "pair_weight": "phases are invariant and exactly one undirected W edge changes symmetrically",
+    "global_weight": "phases are invariant and many W edges change together"
+  },
+  "decoded_equations": {
+    "phase_only": "dphi_i/dt ~= 0.86969 * sum_j W_ij sin(phi_j-phi_i) + bounded zero-mean residual",
+    "pair_weight": "delta W_ij = delta W_ji ~= 0.045 * exp(-0.5 * ((wrapped_phase_difference-target)/0.3pi)^2), with three inferred target modes near 0.1, pi/2, 2pi/3",
+    "global_weight": "W <- 0.995 W, then entries below approximately 0.005 are set to zero"
+  },
+  "interpretation": {
+    "positive": "The decoder no longer needs FREE/GROW/PRUNE labels or the growth target relation. It separates the stream by transition support, recovers the three operator families, infers three hidden growth-target modes, and reconstructs the same compact P-KAS core equations.",
+    "important_limit": "The regime discovery is easy because the historical P-KAS operators have very different change signatures: phase-only, one-pair W edit, and dense W edit. The decoder is still given the state factorization into phases and W and is not yet handling noisy overlapping regimes.",
+    "next": "Gate 10C should hide the boundary between core physics and SAT policy. Give the decoder state/intervention traces from the SAT wrapper and ask it to recover which clause/variable-selection policy is being executed, including whether it can expose the historical literal-sign mismatch without reading source."
+  }
+}
