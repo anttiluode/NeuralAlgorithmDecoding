@@ -312,13 +312,91 @@ That route is paused rather than tuned until it wins against random querying.
 
 ---
 
+# Gate 3 — blind temporal demixing
+
+This is the first gate where the network is **not given source labels**.
+
+Two independent Gaussian AR processes have different temporal autocorrelation and are mixed by a fixed 2x2 matrix.
+
+The neural organism is:
+
+```text
+mixture x(t)
+    |
+    v
+2 -> tanh(16) -> 2 latent channels
+    |
+    v
+linear decoder -> reconstruct x(t)
+```
+
+Training uses only the observations:
+
+- reconstruct the mixture;
+- keep both latent channels alive with a covariance-to-identity constraint;
+- suppress off-diagonal lagged covariances at lags 1, 2, 5, and 10.
+
+So the separation signal is essentially a differentiable neural version of the temporal structure exploited by AMUSE/SOBI.
+
+No true source appears in the loss.
+
+Five seeds, 2000 steps:
+
+| quantity | mean |
+| --- | ---: |
+| neural latent vs true-source correlation | `0.99740` |
+| reconstruction-only attacker correlation | `0.85502` |
+| analytic AMUSE correlation | `0.99981` |
+| decoded affine row-direction error vs exact inverse | `0.194°` |
+| affine surrogate NMSE vs neural latent | `0.00380` |
+| neural source correlation at 2x amplitude | `0.98929` |
+| decoded-math source correlation at 2x amplitude | `0.999851` |
+
+This one matters conceptually.
+
+The nonlinear neural circuit learned blind source separation from temporal statistics. When we then treated that trained circuit as a black box and fitted its collective input->latent operation, the recovered matrix rows aligned with the exact demixing directions to about **0.2 degrees** on average.
+
+So now the sequence is:
+
+```text
+mixed temporal data
+      ->
+nonlinear neural circuit learns separation without source labels
+      ->
+distributed neural transformation
+      ->
+read collective operator
+      ->
+recover the classical demixing geometry
+```
+
+The analytic AMUSE attacker is still slightly better. Good. We are not inventing a better source separator.
+
+The point is stranger:
+
+> **a neural circuit can learn a fuzzy implementation of a known mathematical separation operation from data, and that mathematics can be decoded back out after learning.**
+
+The seed-0 developmental trace is also non-monotonic:
+
+```text
+step       source corr      decoded row error
+0             .888              11.38°
+100           .745              60.92°
+200           .744              60.04°
+500           .855              34.07°
+1000          .998               0.44°
+2000          .999               0.13°
+```
+
+So the circuit does not simply rotate smoothly toward the answer. It wanders through a worse mixed representation and then reorganizes sharply into the separated basis.
+
+That is much closer to the "circuit forming around a computation" picture than Gate 0 was.
+
+See `experiments/gate3_blind_temporal_demix.py` and `results/gate3_summary.json`.
+
+---
+
 ## What comes next
-
-### G3 — blind demixing / coordinate discovery
-
-Remove source labels from the learner. Train with independence or temporal structure, then ask whether the decoder can first discover a useful coordinate system and only then recover the learned demixing law.
-
-This is where the Tuesday / ICA / IVA lineage should finally earn a direct role.
 
 ### G4 — temporal algorithm
 
