@@ -1,0 +1,32 @@
+{
+  "seeds": [0, 1, 2, 3, 4],
+  "steps": 2000,
+  "train_horizon": 24,
+  "test_horizon": 1024,
+  "chosen_state_counts": [2, 2, 2, 2, 2],
+  "raw_cluster_counts": [4, 3, 2, 2, 4],
+  "transition_consistency": [1.0, 1.0, 1.0, 1.0, 1.0],
+  "output_consistency": [1.0, 1.0, 1.0, 1.0, 1.0],
+  "neural_long_accuracy_vs_truth": {"values": [1.0, 1.0, 1.0, 1.0, 1.0], "mean": 1.0},
+  "fsm_long_accuracy_vs_truth": {"values": [1.0, 1.0, 1.0, 1.0, 1.0], "mean": 1.0},
+  "fsm_fidelity_vs_neural": {"values": [1.0, 1.0, 1.0, 1.0, 1.0], "mean": 1.0},
+  "suffix_fidelity_to_injected_fsm": {"values": [1.0, 1.0, 1.0, 1.0, 1.0], "mean": 1.0},
+  "first_step_fidelity": {"values": [1.0, 1.0, 1.0, 1.0, 1.0], "mean": 1.0},
+  "canonical_transition_tables": [
+    [[0, 1], [1, 0]],
+    [[0, 1], [1, 0]],
+    [[0, 1], [1, 0]],
+    [[0, 1], [1, 0]],
+    [[0, 1], [1, 0]]
+  ],
+  "output_maps": [[0, 1], [0, 1], [0, 1], [0, 1], [1, 0]],
+  "reset_states": [0, 0, 0, 0, 1],
+  "seed0_checkpoints": [
+    {"step": 0, "train_horizon_accuracy": 0.5055338740348816},
+    {"step": 100, "train_horizon_accuracy": 0.5265299677848816},
+    {"step": 300, "train_horizon_accuracy": 0.5934244990348816},
+    {"step": 600, "train_horizon_accuracy": 1.0},
+    {"step": 1000, "train_horizon_accuracy": 1.0},
+    {"step": 2000, "train_horizon_accuracy": 1.0}
+  ]
+}
