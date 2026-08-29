@@ -73,9 +73,10 @@ If you are arriving from outside the project, these are the useful checkpoints r
 | **9** | addition learning through training | the pretty "geometry suddenly clicks at Aha" story fails here: causal geometry forms before sudden-looking complete-problem success |
 | **10A** | labeled P-KAS core transitions | hidden phase/plasticity/pruning constants and equations recover from black-box experiments |
 | **10B** | **unlabeled** mixed P-KAS transitions | transition families separate without FREE/GROW/PRUNE labels; three hidden growth targets and the same core equations are recovered |
+| **10C** | P-KAS SAT intervention policy | black-box action traces recover the clause/variable/target policy and expose the historical target-sign mismatch by counterfactual tests |
 
-The strongest current program-extraction result is Gate 5.  
-The latest equation-recovery result is Gate 10B.  
+The strongest current neural program-extraction result is Gate 5.  
+The latest policy-recovery result is Gate 10C.  
 Neither is evidence that arbitrary large neural networks can already be decompiled.
 
 ---
@@ -1133,32 +1134,121 @@ See:
 
 ---
 
-## What comes next
+# Gate 10C — recover SAT policy and a historical bug from behavior
 
-### G10C — recover policy, not just physics
+Gate 10C moves above low-level equations.
 
-The historical SAT wrapper gives us a much sharper target.
-
-Manual source inspection found that the adapter can select a variable from one literal
-while taking the desired Boolean sign from **the first literal of the clause**.
-
-The next decoder should not read that source.
-
-Give it SAT state/intervention traces and ask which executable policy predicts:
+The decoder sees:
 
 ```text
-which clause is acted on
-which variable is selected
-which target phase is applied
+unsatisfied-clause context
+which clause was acted on
+which variable was intervened on
+which target phase was applied
 ```
 
-The kill test is specific:
+It does not use the SAT adapter source.
 
-> can black-box behavioral decoding recover the historical sign-selection mismatch rather
-> than merely fit the low-level oscillator equations?
+First, the acted-on clauses behave like a uniform size-10 subset without replacement.
+Inside each selected 3-literal clause, the chosen variable position is approximately
+uniform:
 
-That would move the project from **equation recovery** toward **program/policy recovery and
-bug discovery**.
+```text
+position 0   .3345
+position 1   .3320
+position 2   .3335
+```
+
+Then candidate target-sign programs are compared:
+
+| candidate | mean accuracy |
+| --- | ---: |
+| **sign of clause[0]** | **1.0000** |
+| majority sign | .7497 |
+| sign of selected literal | .6687 |
+| sign of clause[2] | .5011 |
+| sign of clause[1] | .4999 |
+
+That reproduces the odd historical behavior we had previously found by reading source:
+
+```text
+selected variable
+    <- random literal in clause
+
+target sign
+    <- FIRST literal in clause
+```
+
+The causal test is stronger.
+
+For trials where a non-first literal is selected:
+
+```text
+flip selected non-first literal sign
+keep clause[0] fixed
+    ->
+target unchanged          100%
+
+flip clause[0] sign
+keep selected literal fixed
+    ->
+target flips              100%
+```
+
+So the decoder has crossed from:
+
+```text
+fit dynamics
+```
+
+into:
+
+```text
+recover an executable decision rule
+and expose a behavioral bug
+```
+
+without source inspection.
+
+This still has a generous interface because the acted-on clause identity is observed.
+
+See:
+
+- `experiments/gate10c_pkas_sat_policy.py`
+- `results/gate10c_pkas_sat_policy_summary.json`
+- `docs/GATE10C_PKAS_SAT_POLICY_RESULT.md`
+
+---
+
+## What comes next
+
+### G10D — remove observed clause identity
+
+Give the decoder only:
+
+```text
+all unsatisfied clauses
+state before
+state after
+observed stamped node
+observed target phase
+downstream W changes
+```
+
+and ask which clause must have generated the transition.
+
+If several clauses are equally compatible, the decoder should return:
+
+```text
+NOT IDENTIFIABLE
+```
+
+rather than inventing one.
+
+That would join the P-KAS policy work to the old TransientWaveCompiler lesson:
+
+> **an explanation is only earned to the level that the available experiment can
+> distinguish it from alternatives.**
 
 A second high-value branch remains genuine delayed-generalization / modular-addition
 grokking: decode the final mechanism, then ask whether a causal "distance to
