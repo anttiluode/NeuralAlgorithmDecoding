@@ -1,0 +1,23 @@
+{
+  "seeds": [0, 1, 2, 3, 4],
+  "steps": 5000,
+  "fidelity_tolerance": 0.01,
+  "linear": {
+    "chosen_degrees": [1, 1, 1, 1, 1],
+    "correct_family_count": 5,
+    "network_id_vs_truth_nmse": {"mean": 0.00006207640690263361, "std": 0.000013099778623187953},
+    "network_ood2x_vs_truth_nmse": {"mean": 0.0027293135412037373, "std": 0.0006154827014880933},
+    "decoded_id_vs_truth_nmse": {"mean": 0.000014288599413703195, "std": 0.000009940065459122619},
+    "decoded_ood2x_vs_truth_nmse": {"mean": 0.000008012012767721898, "std": 0.0000054692263910932395},
+    "ood_advantage_ratio_network_over_decoded": {"values": [276.5866250641836, 836.5091871298827, 211.24181060166546, 2452.3018237752526, 254.66943344839942], "mean": 806.2617760038768}
+  },
+  "quadratic": {
+    "chosen_degrees": [2, 2, 2, 2, 2],
+    "correct_family_count": 5,
+    "network_id_vs_truth_nmse": {"mean": 0.0011026288149878383, "std": 0.0007181038215510051},
+    "network_ood2x_vs_truth_nmse": {"mean": 0.04584673680365085, "std": 0.016197116569910283},
+    "decoded_id_vs_truth_nmse": {"mean": 0.0005077145833638497, "std": 0.0006153831490942621},
+    "decoded_ood2x_vs_truth_nmse": {"mean": 0.0013033845461905003, "std": 0.0022763868618479914},
+    "ood_advantage_ratio_network_over_decoded": {"values": [672.3495492129122, 217.08256233842897, 261.555100733915, 10.826366897848494, 111.62071972157658], "mean": 254.68685978093626}
+  }
+}
