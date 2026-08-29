@@ -837,13 +837,86 @@ See `experiments/gate8_geometry_hysteresis.py` and
 
 ---
 
+# Gate 9 — artificial Aha microscope
+
+The Aha / insight literature suggested a tempting stronger claim:
+
+> perhaps the internal geometry itself **clicks** at the moment a solution becomes available.
+
+Gate 9 tests that claim in the addition GRU because Gate 5 already gave us the final
+causal abstraction: a two-state decimal carry machine.
+
+The converged mechanism is used as a **progress microscope** over earlier checkpoints.
+
+At each checkpoint:
+
+- test ordinary length-8 digit accuracy;
+- test length-128 digit accuracy;
+- demand exact success on all 128 output digits;
+- inject real hidden states and query all 100 possible next digit pairs;
+- score each state's causal response signature against the final carry mechanism;
+- measure when the two causal response classes become geometrically separable.
+
+Five-seed median ordering:
+
+```text
+causal geometry >=90% separable        step 300
+short-horizon digit accuracy >=90%     step 400
+causal response error <=5%             step 450
+>=10% exact carry response states      step 450
+exact 128-column success >=10%         step 700
+causal response error <=1%             step 800
+exact 128-column success >=50%         step 875   (4/5 reached)
+```
+
+So the strict slogan **"Aha = geometry suddenly appears" fails in this organism**.
+
+The useful geometry becomes visible first. The causal law then keeps sharpening, and only
+later does complete long-horizon behavior look as though it has clicked.
+
+That visible suddenness is partly a threshold effect: when 128 local decisions must all
+be right, tiny improvements near 99-100% per-step reliability produce large changes in
+complete-problem success.
+
+The sharper current picture is:
+
+```text
+geometry / causal representation begins forming
+          ->
+system becomes increasingly close to the compact algorithm
+          ->
+external success criterion crosses a threshold
+          ->
+"Aha-like" behavioral transition
+```
+
+This is an artificial-network result only. It does not identify the mechanism of human
+insight.
+
+The accompanying paper review separates recent human evidence for representational
+change, pre-Aha neural state, dynamic brain-state trajectories, sleep, structural
+connectivity, reward and memory from the stronger geometry speculation.
+
+See:
+
+- `experiments/gate9_aha_geometry.py`
+- `results/gate9_summary.json`
+- `docs/GATE9_AHA_GEOMETRY_RESULT.md`
+- `docs/AHA_SIGNAL_PAPER_REVIEW_2026-08-29.md`
+
+---
+
 ## What comes next
 
-### G9 — P-KAS as a known mechanistic animal
+### G10 — P-KAS as a known mechanistic animal
 
 P-KAS already has a manual decomposition in `pkas_doors.py`: symmetric learned coupling, explicit twist, clause pull, pruning, and falsifiable ablations.
 
 Hide the source code from the decoder and ask whether trajectories + interventions are enough to rediscover that decomposition.
+
+A second high-value branch is genuine delayed-generalization / modular-addition grokking:
+decode the final mechanism, then ask whether a causal "distance to generalization" can be
+measured before the visible test-accuracy transition.
 
 ---
 
