@@ -1,0 +1,47 @@
+{
+  "seeds": [0, 1, 2, 3, 4],
+  "architecture": "2 -> tanh(16) -> 2",
+  "task": "supervised recovery of two independent sources from a fixed linear mixture",
+  "exact_inverse": [
+    [1.3636363744735718, -0.9090908169746399],
+    [-0.45454540848731995, 1.1363635063171387]
+  ],
+  "metrics": {
+    "network_nmse": {
+      "mean": 0.00013200266985222698,
+      "std": 0.00006893088321131788
+    },
+    "ls_vs_exact_rel_fro": {
+      "mean": 0.0012095833313651382,
+      "std": 0.0002926005106508457
+    },
+    "ls_surrogate_vs_network_nmse": {
+      "mean": 0.0001224784427904524,
+      "std": 0.00006914756989542463
+    },
+    "jacobian_vs_exact_rel_fro": {
+      "mean": 0.0043868689564988015,
+      "std": 0.0017790719576869804
+    },
+    "ood_2x_network_nmse": {
+      "mean": 0.004007571563124657,
+      "std": 0.0005901320503048605
+    },
+    "ood_2x_extracted_math_nmse": {
+      "mean": 0.000005254959160083672,
+      "std": 0.000001935083741718952
+    },
+    "circuit_units_for_1pct_fidelity": {
+      "mean": 15.0,
+      "std": 0.0
+    }
+  },
+  "seed0_extracted_matrix": [
+    [1.3624428510665894, -0.9094398021697998],
+    [-0.454735666513443, 1.1372262239456177]
+  ],
+  "seed0_avg_jacobian": [
+    [1.3648704290390015, -0.9083463549613953],
+    [-0.4544104337692261, 1.1330913305282593]
+  ]
+}
