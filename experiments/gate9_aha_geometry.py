@@ -140,6 +140,39 @@ def causal_signature_metrics(
     }
 
 
+def make_batch_with_generator(
+    batch: int,
+    horizon: int,
+    generator: torch.Generator,
+):
+    a = torch.randint(
+        0,
+        BASE,
+        (batch, horizon),
+        generator=generator,
+    )
+    b = torch.randint(
+        0,
+        BASE,
+        (batch, horizon),
+        generator=generator,
+    )
+
+    carry = torch.zeros(batch, dtype=torch.long)
+    outputs = []
+    for t in range(horizon):
+        total = a[:, t] + b[:, t] + carry
+        outputs.append(total % BASE)
+        carry = total // BASE
+
+    return (
+        encode_pairs(a, b),
+        torch.stack(outputs, dim=1),
+        a,
+        b,
+    )
+
+
 def audit_checkpoint(
     model: AddGRU,
     *,
@@ -154,24 +187,15 @@ def audit_checkpoint(
         seed * 100_000 + step + 777
     )
 
-    x8, y8, _a8, _b8 = make_batch(
+    x8, y8, _a8, _b8 = make_batch_with_generator(
         local_batch,
         8,
-        seed=None,
+        g,
     )
-    # make_batch does not currently accept a generator. Re-seed torch immediately
-    # before each audit so checkpoint probes are deterministic.
-    torch.manual_seed(
-        seed * 100_000 + step + 777
-    )
-    x8, y8, _a8, _b8 = make_batch(local_batch, 8)
-
-    torch.manual_seed(
-        seed * 100_000 + step + 778
-    )
-    x_long, y_long, _a_long, _b_long = make_batch(
+    x_long, y_long, _a_long, _b_long = make_batch_with_generator(
         long_batch,
         long_horizon,
+        g,
     )
 
     with torch.no_grad():
