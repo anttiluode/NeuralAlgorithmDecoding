@@ -700,9 +700,146 @@ See `experiments/gate6_causal_geometry.py`,
 
 ---
 
+# Gate 7 — same algorithm, different worlds, different geometry
+
+Gate 6 showed that the decoded carry computation lives inside a structured neural
+geometry. Gate 7 asks the stronger splat-shaped question:
+
+> **Does the training world help choose that geometry even when the final algorithm is
+> the same?**
+
+For each seed, three GRUs start from **identical initial weights** and learn the same
+decimal-addition task.
+
+Only the training statistics differ:
+
+```text
+uniform   carry persists ~55%, flips ~45%
+sticky    carry persists ~84%, flips ~16%
+toggle    carry persists ~19%, flips ~81%
+```
+
+The biased worlds still draw 35% uniformly, so every digit pair retains support.
+
+After training, all 15 networks decode to the same object:
+
+```text
+2 causal states
+base = 10
+program mismatches = 0
+```
+
+Uniform held-out accuracy stays above `0.997` mean in every world.
+
+But the causal realization geometry differs.
+
+Median intervention distance required to flip causal response class, normalized by RMS
+hidden-state norm:
+
+```text
+uniform   0.2019
+sticky    0.2731
+toggle    0.2628
+```
+
+The sticky geometry has a **35.3% larger** causal flip radius than the paired uniform
+model; toggle is **30.2% larger**. Both differences have the same sign on all 5 paired
+seeds.
+
+Even better, the ordinary hidden-space boundary predicts the actual intervention
+threshold surprisingly well:
+
+```text
+corr(predicted geometric margin, actual causal flip radius)
+
+uniform   0.888
+sticky    0.807
+toggle    0.831
+```
+
+And direction matters enormously. At a `0.3 x RMS-state-norm` perturbation:
+
+```text
+                 boundary-normal flip     matched random flip
+uniform                 97.0%                    0.94%
+sticky                  63.0%                    0.47%
+toggle                  68.8%                    0.63%
+```
+
+So the result is not just "different networks use different coordinates."
+
+Within the same architecture and task, training statistics alter the **causal robustness
+geometry** while the decoded symbolic algorithm remains unchanged.
+
+That is the cleanest current artificial analogue of the old SplatField picture:
+
+```text
+world statistics
+      ->
+geometry forms
+      ->
+freeze / run
+      ->
+geometry constrains which perturbations change computation
+```
+
+See `experiments/gate7_world_shapes_geometry.py` and
+`results/gate7_summary.json`.
+
+---
+
+# Gate 8 — geometry has history
+
+There is an immediate alternate explanation for Gate 7:
+
+> perhaps the three worlds merely select different solutions during initial learning.
+
+So Gate 8 starts with **one already-converged uniform-world network**, clones the exact
+weights, and only then switches one clone to the sticky world and the other to the toggle
+world for another 800 updates.
+
+The base-10 program remains exact.
+
+But the geometry barely moves:
+
+```text
+from-scratch Gate 7:
+sticky vs uniform causal-radius difference    +35.3%
+toggle vs uniform causal-radius difference    +30.2%
+
+post-convergence Gate 8:
+uniform -> sticky, 800 updates                 +0.4%
+uniform -> toggle, 800 updates                 -2.3%
+```
+
+So in this tiny organism the same statistics that strongly affect **which geometry forms**
+do not rapidly rewrite the realization after the algorithm has converged.
+
+That suggests a developmental / hysteretic picture:
+
+```text
+world during formation
+      ->
+one neural realization basin is selected
+      ->
+algorithm stabilizes
+      ->
+later same-task statistics can change experience
+without cheaply rebuilding the realization geometry
+```
+
+This is a negative result against the simplest "geometry just tracks current data
+statistics" story, and it makes the splat/evolutionary intuition more interesting rather
+than less.
+
+See `experiments/gate8_geometry_hysteresis.py` and
+`results/gate8_summary.json`.
+
+---
+
 ## What comes next
 
-### G7 — P-KAS as a known mechanistic animal
+### G9 — P-KAS as a known mechanistic animal
 
 P-KAS already has a manual decomposition in `pkas_doors.py`: symmetric learned coupling, explicit twist, clause pull, pruning, and falsifiable ablations.
 
