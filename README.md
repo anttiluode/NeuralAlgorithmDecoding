@@ -632,9 +632,77 @@ See `experiments/gate5_addition_causal_decode.py` and `results/gate5_summary.jso
 
 ---
 
+# Gate 6 — the algorithm has a geometry too
+
+The splat lineage carried a more specific idea than "geometry computes":
+
+```text
+internal / data world
+      ->
+learned geometry
+      ->
+freeze geometry
+      ->
+geometry constrains later dynamics
+```
+
+In SplatField this was the explicit **data world -> Gram world** split: face data chose the
+packet basis, then the frozen packet-overlap Gram matrix determined the autonomous field's
+modes and decay rates.
+
+Gate 6 asks whether the same distinction helps on the addition GRU.
+
+Gate 5 already supplied two causal classes using only complete 100-input counterfactual
+response signatures. No carry labels are used.
+
+Now use those intervention-defined classes to inspect the raw 16-D hidden geometry.
+
+Across five seeds:
+
+```text
+causal classes linearly separable in held-out hidden states       5/5
+halfway toward fitted causal boundary: class flip                0.0%
+25% past boundary normal: class flip                            93.9%
+same Euclidean displacement orthogonal to boundary: flip         0.0%
+```
+
+So the raw neural geometry is not merely arbitrary decoration around the decoded program.
+Learning has produced a state-space direction along which perturbation changes the
+computation, while large matched orthogonal changes are almost computationally silent.
+
+But the important caveat is just as useful. Crossing the linear boundary often produces
+an **off-manifold fuzzy state**: the resulting full response signature is about `20.3%`
+Hamming distance from the nearest canonical class on average.
+
+Therefore:
+
+> **The geometry constrains computation, but a geometric axis is not automatically a clean
+> symbolic variable.**
+
+The current picture has two legitimate outputs:
+
+```text
+ALGORITHMIC QUOTIENT
+two causal states -> decimal carry program
+
+REALIZATION GEOMETRY
+thick 16-D neural regions
++ causally important separating direction
++ mostly silent nuisance directions
++ invalid/off-manifold regions
+```
+
+That is a much closer inheritance from the splat work than treating geometry as nuisance.
+
+See `experiments/gate6_causal_geometry.py`,
+`results/gate6_summary.json`, and
+`docs/SPLAT_GEOMETRY_LINEAGE.md`.
+
+---
+
 ## What comes next
 
-### G6 — P-KAS as a known mechanistic animal
+### G7 — P-KAS as a known mechanistic animal
 
 P-KAS already has a manual decomposition in `pkas_doors.py`: symmetric learned coupling, explicit twist, clause pull, pruning, and falsifiable ablations.
 
