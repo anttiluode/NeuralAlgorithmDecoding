@@ -1,0 +1,61 @@
+{
+  "experiment": "Gate 10D P-KAS clause identifiability",
+  "execution_note": "Five local seeds, 500 contexts per seed, 10 actions per context.",
+  "decoder_access": "all current clauses + selected variable + target phase + W before/after; selected clause index hidden",
+  "reused_decoded_rule": "Gate 10C: target sign follows clause[0]",
+  "test_design": {
+    "clauses_per_context": 18,
+    "actions_per_context": 10,
+    "deliberate_alias_pairs_per_context": 3,
+    "alias_definition": "same absolute variable set and same clause[0] sign; different non-first literal signs"
+  },
+  "summary": {
+    "true_clause_coverage": {
+      "values": [1.0, 1.0, 1.0, 1.0, 1.0],
+      "mean": 1.0
+    },
+    "identified_fraction": {
+      "values": [0.6662, 0.666, 0.6688, 0.6668, 0.6644],
+      "mean": 0.66644
+    },
+    "identified_clause_accuracy": {
+      "values": [1.0, 1.0, 1.0, 1.0, 1.0],
+      "mean": 1.0
+    },
+    "not_identifiable_fraction": {
+      "values": [0.3338, 0.334, 0.3312, 0.3332, 0.3356],
+      "mean": 0.33356
+    },
+    "identifiability_class_accuracy": {
+      "values": [1.0, 1.0, 1.0, 1.0, 1.0],
+      "mean": 1.0
+    },
+    "mean_candidate_set_size_with_W_trace": {
+      "values": [1.335, 1.334, 1.332, 1.3332, 1.3356],
+      "mean": 1.33396
+    },
+    "mean_candidate_set_size_without_W_trace": {
+      "values": [2.5672, 2.574, 2.5764, 2.582, 2.5786],
+      "mean": 2.57564
+    },
+    "unique_fraction_with_W_trace": {
+      "values": [0.6662, 0.666, 0.6688, 0.6668, 0.6644],
+      "mean": 0.66644
+    },
+    "unique_fraction_without_W_trace": {
+      "values": [0.2228, 0.2208, 0.217, 0.2288, 0.2198],
+      "mean": 0.22184
+    }
+  },
+  "decoded_logic": {
+    "structural_trace": "changed W pairs reveal the three-variable set of the acted-on clause",
+    "target_filter": "Gate-10C rule filters candidates by clause[0] sign",
+    "decision": "return the unique compatible clause if exactly one remains; otherwise return NOT_IDENTIFIABLE with the full compatible set"
+  },
+  "interpretation": {
+    "positive": "The downstream structural trace reduces the mean clause candidate set from 2.58 to 1.33 and raises unique identification from 22.2% to 66.6%. Whenever the declared observations uniquely determine a clause, the decoder identifies it correctly.",
+    "identifiability_result": "The remaining one-third of events were deliberately constructed aliases that share the exact observable signature under this intervention family. The decoder returns NOT_IDENTIFIABLE on those cases and matches the ground-truth identifiability class 100% of the time.",
+    "why_it_matters": "This is the first gate where refusing to provide a unique explanation is part of passing. It imports the TransientWaveCompiler gauge/identifiability lesson directly into policy decoding.",
+    "scope_limit": "The aliases are cleanly engineered and the W support is noiseless. Real neural systems will require graded/noise-aware equivalence rather than exact matching."
+  }
+}
