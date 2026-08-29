@@ -1,0 +1,61 @@
+{
+  "experiment": "Gate 10A P-KAS black-box equation recovery",
+  "execution": "5 local seeds against the committed black-box protocol",
+  "decoder_access": "states before/after, operation labels/control arguments, timestamps; decoder does not read hidden organism constants",
+  "ground_truth_for_posthoc_scoring_only": {
+    "coupling_gain": 0.87,
+    "noise_width": 0.03,
+    "growth_amplitude": 0.045,
+    "growth_width_over_pi": 0.3,
+    "prune_rate": 0.005,
+    "prune_threshold": 0.005
+  },
+  "summary": {
+    "coupling_gain_hat": {
+      "values": [0.8699408104532576, 0.86988408599751, 0.869859788977327, 0.8697359196919223, 0.8703036321093695],
+      "mean": 0.8699448474458771,
+      "std": 0.00019147868556008106
+    },
+    "noise_width_hat": {
+      "values": [0.030024600657495234, 0.03014796059602991, 0.030256402418141877, 0.03029301656157197, 0.030062960524767795],
+      "mean": 0.03015698815160136,
+      "std": 0.0001047257461444793
+    },
+    "free_model_r2": {
+      "values": [0.9990525474388183, 0.9989802988748927, 0.9991227985851745, 0.9991009297413341, 0.9990652803613127],
+      "mean": 0.999064370, 
+      "std": 0.000049
+    },
+    "growth_amplitude_hat": {
+      "values": [0.04500000000000005, 0.044999999999999964, 0.04500000000000005, 0.04500000000000005, 0.04500000000000005],
+      "mean": 0.045000000000000026
+    },
+    "growth_width_over_pi_hat": {
+      "values": [0.3, 0.3000000000000001, 0.3, 0.2999999999999999, 0.30000000000000004],
+      "mean": 0.3
+    },
+    "growth_log_gaussian_fit_r2": {
+      "values": [1.0, 1.0, 1.0, 1.0, 1.0],
+      "mean": 1.0
+    },
+    "symmetric_growth_seeds": 5,
+    "prune_rate_hat": {
+      "values": [0.0050000000000000044, 0.0050000000000000044, 0.0050000000000000044, 0.0050000000000000044, 0.0050000000000000044],
+      "mean": 0.0050000000000000044
+    },
+    "prune_threshold_hat": {
+      "values": [0.005000000000021828, 0.005000000000021828, 0.005000000000021828, 0.005000000000021828, 0.005000000000021828],
+      "mean": 0.005000000000021828
+    }
+  },
+  "decoded_equations": {
+    "free_phase_dynamics": "dphi_i/dt ~= K * sum_j W_ij sin(phi_j-phi_i) + zero-mean bounded residual",
+    "pair_growth": "delta_w ~= eta * exp(-0.5 * ((wrapped_phase_difference-target)/sigma)^2), applied symmetrically to W_ij and W_ji",
+    "pruning": "W <- (1-prune_rate) W; then entries below threshold are set to zero"
+  },
+  "interpretation": {
+    "positive": "With explicit state access and clean intervention boundaries, the decoder recovered the central P-KAS core constants and functional forms to near numerical precision.",
+    "scope_limit": "This is a deliberately easy calibration. The decoder is told which operation occurred and receives target_relation for growth. It has not yet discovered the higher-level SAT adapter, clause-selection policy, or a hidden equation language from raw trajectories alone.",
+    "next_attack": "Remove operation labels, mix free/grow/prune transitions into one trace, and ask the decoder to discover regimes before fitting equations."
+  }
+}
