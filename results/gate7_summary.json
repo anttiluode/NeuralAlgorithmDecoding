@@ -1,0 +1,136 @@
+{
+  "seeds": [0, 1, 2, 3, 4],
+  "steps": 2000,
+  "train_horizon": 8,
+  "paired_initialization": true,
+  "uniform_fraction_in_biased_worlds": 0.35,
+  "world_transition_stats": {
+    "uniform": {
+      "carry_persistence_fraction": 0.5505525,
+      "carry_flip_fraction": 0.4494475
+    },
+    "sticky": {
+      "carry_persistence_fraction": 0.8417625,
+      "carry_flip_fraction": 0.1582375
+    },
+    "toggle": {
+      "carry_persistence_fraction": 0.192395,
+      "carry_flip_fraction": 0.807605
+    }
+  },
+  "decoded_algorithm": {
+    "causal_state_count": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+    "program_base": [10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10],
+    "program_mismatches": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  },
+  "worlds": {
+    "uniform": {
+      "uniform_eval_accuracy": {
+        "values": [0.99993896484375, 1.0, 0.99884033203125, 0.9998779296875, 0.9998779296875],
+        "mean": 0.99970703125
+      },
+      "mahalanobis_class_separation": {
+        "values": [8.342638687203847, 9.209406022927343, 8.150865337736333, 12.00504998410425, 7.270443630831056],
+        "mean": 8.995680732560567
+      },
+      "predicted_boundary_margin_rms": {
+        "values": [0.19221205311448847, 0.2097292163264498, 0.15756368170634993, 0.22717302489888347, 0.17358352515857822],
+        "mean": 0.19205230024095
+      },
+      "actual_causal_flip_radius_rms": {
+        "values": [0.20156250000000003, 0.221875, 0.16250000000000003, 0.2421875, 0.18125000000000002],
+        "mean": 0.201875
+      },
+      "predicted_margin_vs_actual_flip_radius_corr": {
+        "values": [0.9109847438854679, 0.8596221576499462, 0.8635349066380006, 0.9088360469631159, 0.8972984729554769],
+        "mean": 0.8880552656184015
+      },
+      "boundary_normal_flip_rate_0p2_rms": {
+        "values": [0.5234375, 0.34375, 0.8671875, 0.2734375, 0.578125],
+        "mean": 0.5171875
+      },
+      "boundary_normal_flip_rate_0p3_rms": {
+        "values": [0.96875, 0.9296875, 1.0, 1.0, 0.953125],
+        "mean": 0.9703125
+      },
+      "matched_random_flip_rate_0p3_rms": {
+        "values": [0.0, 0.0078125, 0.015625, 0.0, 0.0234375],
+        "mean": 0.009375
+      }
+    },
+    "sticky": {
+      "uniform_eval_accuracy": {
+        "values": [0.999755859375, 0.99871826171875, 0.99737548828125, 0.99920654296875, 0.99853515625],
+        "mean": 0.99871826171875
+      },
+      "mahalanobis_class_separation": {
+        "values": [8.280493600063501, 7.906556027995338, 7.008332889206837, 7.4896442697245815, 7.34117924065859],
+        "mean": 7.60524120552977
+      },
+      "predicted_boundary_margin_rms": {
+        "values": [0.2363972089527392, 0.24887750015054105, 0.25277649256211454, 0.28153985550203775, 0.26191277014783587],
+        "mean": 0.2563007654630537
+      },
+      "actual_causal_flip_radius_rms": {
+        "values": [0.2421875, 0.27187500000000003, 0.27187500000000003, 0.3187500000000001, 0.26093750000000004],
+        "mean": 0.27312500000000006
+      },
+      "predicted_margin_vs_actual_flip_radius_corr": {
+        "values": [0.7946141589800239, 0.9059033066897648, 0.7460781249824895, 0.7686387630897662, 0.8179152680442042],
+        "mean": 0.8066299243572497
+      },
+      "boundary_normal_flip_rate_0p2_rms": {
+        "values": [0.1328125, 0.125, 0.125, 0.0625, 0.2421875],
+        "mean": 0.1375
+      },
+      "boundary_normal_flip_rate_0p3_rms": {
+        "values": [0.6640625, 0.6015625, 0.6015625, 0.546875, 0.734375],
+        "mean": 0.6296875
+      },
+      "matched_random_flip_rate_0p3_rms": {
+        "values": [0.0, 0.0, 0.015625, 0.0078125, 0.0],
+        "mean": 0.0046875
+      }
+    },
+    "toggle": {
+      "uniform_eval_accuracy": {
+        "values": [0.998291015625, 0.99749755859375, 0.99517822265625, 0.998779296875, 0.99664306640625],
+        "mean": 0.99727783203125
+      },
+      "mahalanobis_class_separation": {
+        "values": [7.572427416559367, 6.071309478880458, 6.809426204601745, 8.458538696678362, 6.71038589977108],
+        "mean": 7.124417539298203
+      },
+      "predicted_boundary_margin_rms": {
+        "values": [0.22840206456709933, 0.27932627900318513, 0.2794771012678184, 0.23903358672147063, 0.21192267504149298],
+        "mean": 0.24763234132021328
+      },
+      "actual_causal_flip_radius_rms": {
+        "values": [0.2421875, 0.29218750000000004, 0.30468750000000006, 0.24375, 0.23125],
+        "mean": 0.2628125
+      },
+      "predicted_margin_vs_actual_flip_radius_corr": {
+        "values": [0.8214175528917583, 0.9141998967068747, 0.6205547315572759, 0.9263932104563184, 0.8744830962996106],
+        "mean": 0.8314096975823675
+      },
+      "boundary_normal_flip_rate_0p2_rms": {
+        "values": [0.2734375, 0.1875, 0.0625, 0.25, 0.2109375],
+        "mean": 0.196875
+      },
+      "boundary_normal_flip_rate_0p3_rms": {
+        "values": [0.796875, 0.6796875, 0.4375, 0.828125, 0.6953125],
+        "mean": 0.6875
+      },
+      "matched_random_flip_rate_0p3_rms": {
+        "values": [0.015625, 0.0078125, 0.0, 0.0, 0.0078125],
+        "mean": 0.00625
+      }
+    }
+  },
+  "paired_world_effect": {
+    "sticky_vs_uniform_actual_flip_radius_increase_fraction": 0.35294117647058876,
+    "toggle_vs_uniform_actual_flip_radius_increase_fraction": 0.30185758513931904,
+    "sticky_actual_flip_radius_greater_than_uniform_seeds": 5,
+    "toggle_actual_flip_radius_greater_than_uniform_seeds": 5
+  }
+}
