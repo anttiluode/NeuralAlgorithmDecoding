@@ -1,0 +1,92 @@
+{
+  "experiment": "Gate 9 artificial Aha microscope",
+  "run_note": "Executed locally with the committed Gate-5 GRU architecture and Gate-9 protocol; 5 seeds, 1200 training steps, checkpoints every 50 steps.",
+  "architecture": "decimal-addition GRU, hidden=16",
+  "train_horizon": 8,
+  "long_test_horizon": 128,
+  "steps": 1200,
+  "checkpoint_interval": 50,
+  "seeds": [0, 1, 2, 3, 4],
+  "thresholds": {
+    "causal_geometry_separability_ge_0.90": {
+      "values": [300, 200, 400, 350, 200],
+      "median": 300.0,
+      "mean": 290.0,
+      "n_reached": 5
+    },
+    "short_digit_accuracy_ge_0.90": {
+      "values": [400, 350, 500, 400, 400],
+      "median": 400.0,
+      "mean": 410.0,
+      "n_reached": 5
+    },
+    "causal_signature_error_le_0.05": {
+      "values": [500, 400, 650, 450, 450],
+      "median": 450.0,
+      "mean": 490.0,
+      "n_reached": 5
+    },
+    "exact_signature_fraction_ge_0.10": {
+      "values": [400, 400, 550, 450, 450],
+      "median": 450.0,
+      "mean": 450.0,
+      "n_reached": 5
+    },
+    "long_sequence_success_ge_0.10": {
+      "values": [650, 450, 1050, 700, 700],
+      "median": 700.0,
+      "mean": 710.0,
+      "n_reached": 5
+    },
+    "causal_signature_error_le_0.01": {
+      "values": [650, 500, 1100, 800, 800],
+      "median": 800.0,
+      "mean": 770.0,
+      "n_reached": 5
+    },
+    "exact_signature_fraction_ge_0.50": {
+      "values": [650, 500, null, 900, 750],
+      "median": 700.0,
+      "mean": 700.0,
+      "n_reached": 4
+    },
+    "long_sequence_success_ge_0.50": {
+      "values": [750, 650, null, 1100, 1000],
+      "median": 875.0,
+      "mean": 875.0,
+      "n_reached": 4
+    },
+    "long_sequence_success_ge_0.90": {
+      "values": [1150, 850, null, null, null],
+      "median": 1000.0,
+      "mean": 1000.0,
+      "n_reached": 2
+    }
+  },
+  "pooled_checkpoint_correlations_after_step_100": {
+    "causal_signature_error_vs_long_sequence_success_spearman": -0.96459142806964,
+    "causal_geometry_separability_vs_long_sequence_success_spearman": 0.5664195909299169,
+    "warning": "These variables all share a strong training-time trend. The correlations are progress associations, not causal estimates."
+  },
+  "seed0_trace": [
+    {"step": 0, "short_digit_accuracy": 0.10595703125, "long_digit_accuracy": 0.10150146484375, "long_sequence_success": 0.0, "causal_signature_error": 0.889375, "exact_signature_fraction": 0.0, "causal_geometry_separability": 0.6640625},
+    {"step": 100, "short_digit_accuracy": 0.19384765625, "long_digit_accuracy": 0.19775390625, "long_sequence_success": 0.0, "causal_signature_error": 0.788671875, "exact_signature_fraction": 0.0, "causal_geometry_separability": 0.6484375},
+    {"step": 200, "short_digit_accuracy": 0.5029296875, "long_digit_accuracy": 0.49365234375, "long_sequence_success": 0.0, "causal_signature_error": 0.47375, "exact_signature_fraction": 0.0, "causal_geometry_separability": 0.8046875},
+    {"step": 300, "short_digit_accuracy": 0.80615234375, "long_digit_accuracy": 0.8226318359375, "long_sequence_success": 0.0, "causal_signature_error": 0.1771875, "exact_signature_fraction": 0.0, "causal_geometry_separability": 0.953125},
+    {"step": 400, "short_digit_accuracy": 0.9326171875, "long_digit_accuracy": 0.92779541015625, "long_sequence_success": 0.0, "causal_signature_error": 0.061171875, "exact_signature_fraction": 0.1015625, "causal_geometry_separability": 0.96875},
+    {"step": 500, "short_digit_accuracy": 0.9794921875, "long_digit_accuracy": 0.96783447265625, "long_sequence_success": 0.0078125, "causal_signature_error": 0.026171875, "exact_signature_fraction": 0.2890625, "causal_geometry_separability": 0.9140625},
+    {"step": 600, "short_digit_accuracy": 0.982421875, "long_digit_accuracy": 0.982177734375, "long_sequence_success": 0.09375, "causal_signature_error": 0.015625, "exact_signature_fraction": 0.453125, "causal_geometry_separability": 0.9453125},
+    {"step": 700, "short_digit_accuracy": 0.99365234375, "long_digit_accuracy": 0.99310302734375, "long_sequence_success": 0.421875, "causal_signature_error": 0.006171875, "exact_signature_fraction": 0.625, "causal_geometry_separability": 0.96875},
+    {"step": 800, "short_digit_accuracy": 0.9970703125, "long_digit_accuracy": 0.996826171875, "long_sequence_success": 0.6171875, "causal_signature_error": 0.0034375, "exact_signature_fraction": 0.7421875, "causal_geometry_separability": 0.984375},
+    {"step": 900, "short_digit_accuracy": 0.99658203125, "long_digit_accuracy": 0.9971923828125, "long_sequence_success": 0.6875, "causal_signature_error": 0.001875, "exact_signature_fraction": 0.859375, "causal_geometry_separability": 0.984375},
+    {"step": 1000, "short_digit_accuracy": 0.998046875, "long_digit_accuracy": 0.99871826171875, "long_sequence_success": 0.8359375, "causal_signature_error": 0.00109375, "exact_signature_fraction": 0.8984375, "causal_geometry_separability": 0.984375},
+    {"step": 1100, "short_digit_accuracy": 0.9990234375, "long_digit_accuracy": 0.99908447265625, "long_sequence_success": 0.8828125, "causal_signature_error": 0.000625, "exact_signature_fraction": 0.9375, "causal_geometry_separability": 0.984375},
+    {"step": 1200, "short_digit_accuracy": 1.0, "long_digit_accuracy": 0.99945068359375, "long_sequence_success": 0.9375, "causal_signature_error": 0.00015625, "exact_signature_fraction": 0.984375, "causal_geometry_separability": 0.96875}
+  ],
+  "interpretation": {
+    "primary": "The hidden causal geometry becomes strongly separable before robust exact long-horizon behavior appears. The internal carry-response mechanism then continues to sharpen gradually.",
+    "negative_result": "This organism does not show evidence that a single abrupt internal geometry transition causes the visible Aha-like behavioral transition.",
+    "threshold_effect": "Exact 128-column success is a nonlinear readout of per-digit competence: smooth improvements near 99-100% digit accuracy are amplified into a steep sequence-level transition.",
+    "scope": "Artificial-network model organism only. No claim that human insight uses the same mechanism."
+  }
+}
