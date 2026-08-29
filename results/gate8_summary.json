@@ -1,0 +1,33 @@
+{
+  "seeds": [0, 1, 2, 3, 4],
+  "initial_world": "uniform",
+  "initial_steps": 2000,
+  "switch_steps": 800,
+  "decoded_algorithm_after_switch": {
+    "sticky": {"base": 10, "mismatches": [0, 0, 0, 0, 0]},
+    "toggle": {"base": 10, "mismatches": [0, 0, 0, 0, 0]}
+  },
+  "sticky": {
+    "before_actual_flip_radius_rms": [0.2125, 0.225, 0.1625, 0.24375, 0.18125],
+    "after_actual_flip_radius_rms": [0.2125, 0.21875, 0.16875, 0.2375, 0.1875],
+    "relative_changes": [0.0, -0.02777777777777779, 0.038461538461538325, -0.02564102564102566, 0.0344827586206895],
+    "mean_relative_change": 0.003905098732684875,
+    "mean_absolute_change": 0.0,
+    "uniform_eval_accuracy_after": [1.0, 1.0, 0.99896240234375, 1.0, 0.99993896484375]
+  },
+  "toggle": {
+    "before_actual_flip_radius_rms": [0.2125, 0.225, 0.1625, 0.24375, 0.18125],
+    "after_actual_flip_radius_rms": [0.2125, 0.2125, 0.1625, 0.225, 0.184375],
+    "relative_changes": [0.0, -0.05555555555555547, 0.0, -0.07692307692307687, 0.01724137931034475],
+    "mean_relative_change": -0.02304745063365752,
+    "mean_absolute_change": -0.005625,
+    "uniform_eval_accuracy_after": [0.9998779296875, 1.0, 0.9993896484375, 1.0, 1.0]
+  },
+  "comparison_to_gate7_from_scratch": {
+    "gate7_sticky_vs_uniform_flip_radius_increase": 0.35294117647058876,
+    "gate7_toggle_vs_uniform_flip_radius_increase": 0.30185758513931904,
+    "gate8_sticky_post_convergence_change": 0.003905098732684875,
+    "gate8_toggle_post_convergence_change": -0.02304745063365752
+  },
+  "interpretation": "The same statistical worlds that produced ~30-35% different causal flip radii when present during learning produced almost no systematic change when introduced for 800 additional updates after a uniform-world solution had converged. In this model organism the realization geometry is path-dependent / hysteretic: statistics influence which geometry forms, but the converged same-task geometry is not cheaply rewritten by later distribution shift."
+}
