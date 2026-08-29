@@ -1,0 +1,51 @@
+{
+  "seeds": [0, 1, 2, 3, 4],
+  "steps": 2000,
+  "train_horizon": 8,
+  "test_horizon": 256,
+  "discovered_state_counts": [2, 2, 2, 2, 2],
+  "signature_consistency": {
+    "values": [1.0, 0.9999914965986395, 0.9998519163763067, 0.9997118644067797, 0.9999913941480207],
+    "mean": 0.9999093343059494
+  },
+  "machine_output_consistency": {
+    "values": [1.0, 1.0, 1.0, 0.9996875, 1.0],
+    "mean": 0.9999375
+  },
+  "machine_transition_consistency": {
+    "values": [1.0, 1.0, 1.0, 1.0, 1.0],
+    "mean": 1.0
+  },
+  "program_found": [true, true, true, true, true],
+  "program_bases": [10, 10, 10, 10, 10],
+  "program_mismatches": [0, 0, 0, 0, 0],
+  "neural_long_accuracy": {
+    "values": [0.999969482421875, 1.0, 0.999847412109375, 0.9996795654296875, 0.9999542236328125],
+    "mean": 0.99989013671875
+  },
+  "machine_long_accuracy": {
+    "values": [1.0, 1.0, 1.0, 1.0, 1.0],
+    "mean": 1.0
+  },
+  "machine_fidelity_vs_neural": {
+    "values": [0.999969482421875, 1.0, 0.999847412109375, 0.9996795654296875, 0.9999542236328125],
+    "mean": 0.99989013671875
+  },
+  "first_step_fidelity": {
+    "values": [1.0, 1.0, 1.0, 1.0, 1.0],
+    "mean": 1.0
+  },
+  "suffix_fidelity": {
+    "values": [1.0, 1.0, 1.0, 0.999755859375, 1.0],
+    "mean": 0.999951171875
+  },
+  "state_to_carry": [[1,0],[1,0],[0,1],[1,0],[0,1]],
+  "seed0_checkpoints": [
+    {"step": 0, "train_horizon_accuracy": 0.1005859375},
+    {"step": 100, "train_horizon_accuracy": 0.2080078125},
+    {"step": 300, "train_horizon_accuracy": 0.859375},
+    {"step": 600, "train_horizon_accuracy": 0.990478515625},
+    {"step": 1000, "train_horizon_accuracy": 0.99951171875},
+    {"step": 2000, "train_horizon_accuracy": 0.999755859375}
+  ]
+}
