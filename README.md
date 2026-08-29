@@ -62,6 +62,22 @@ The target is:
 
 There may be no unique "true algorithm" inside a neural network. The practical target is therefore the **simplest faithful causal abstraction we can earn under an explicit intervention/test family**.
 
+## Current receipts
+
+If you are arriving from outside the project, these are the useful checkpoints rather than the whole archaeology:
+
+| gate | organism | what survived |
+| --- | --- | --- |
+| **5** | 16-D GRU doing decimal addition | counterfactual response classes -> 2-state transducer -> exact base-10 carry program; hidden-state swaps follow the decoded machine |
+| **7/8** | same addition algorithm trained in different statistical worlds | the abstract program stays the same while causal robustness geometry changes; that geometry shows strong path dependence after convergence |
+| **9** | addition learning through training | the pretty "geometry suddenly clicks at Aha" story fails here: causal geometry forms before sudden-looking complete-problem success |
+| **10A** | labeled P-KAS core transitions | hidden phase/plasticity/pruning constants and equations recover from black-box experiments |
+| **10B** | **unlabeled** mixed P-KAS transitions | transition families separate without FREE/GROW/PRUNE labels; three hidden growth targets and the same core equations are recovered |
+
+The strongest current program-extraction result is Gate 5.  
+The latest equation-recovery result is Gate 10B.  
+Neither is evidence that arbitrary large neural networks can already be decompiled.
+
 ---
 
 ## Why this repo exists
@@ -1009,16 +1025,140 @@ See:
 
 ---
 
+# Gate 10B — discover the P-KAS regimes before fitting equations
+
+Gate 10A was still told which operation happened.
+
+Gate 10B receives a shuffled stream containing only:
+
+```text
+phase_before
+phase_after
+W_before
+W_after
+dt
+```
+
+No FREE / GROW / PRUNE labels.
+
+No changed pair.
+
+No growth target relation.
+
+The transition support itself reveals three regimes:
+
+```text
+phase changes, W fixed       -> phase-only flow
+one reciprocal W pair moves  -> local pair plasticity
+many W entries move          -> global pruning
+```
+
+Post-hoc truth scoring:
+
+```text
+regime recovery accuracy     1.000 on all 5 seeds
+```
+
+The phase-only regime again yields:
+
+```text
+true K                 0.870000
+decoded mean K         0.869688
+
+true noise width       0.030000
+decoded mean           0.029957
+
+mean R^2               0.99810
+```
+
+The pair-growth regime is more interesting because the decoder is **not told the hidden
+target relation**.
+
+From the strongest updates it discovers three preferred phase differences on every seed:
+
+```text
+~0.1
+~pi/2
+~2*pi/3
+```
+
+and recovers one shared law:
+
+```text
+delta W_ij = delta W_ji
+
+delta_w
+  ~= 0.045 *
+     exp(
+       -0.5 *
+       ((phase_difference-target)/(0.3*pi))^2
+     )
+```
+
+with fit `R^2 = 1.0` in this deterministic calibration.
+
+The global-weight regime yields:
+
+```text
+W <- 0.995 W
+
+if W < ~0.005:
+    W = 0
+```
+
+with decoded mean threshold `0.004999856`.
+
+So the progression is now:
+
+```text
+Gate 10A
+named transition -> fit equation
+
+Gate 10B
+unlabeled transition
+    -> identify transition family
+    -> infer hidden relation modes
+    -> fit equation
+```
+
+The large caveat remains: P-KAS makes this unusually easy because its three operations
+touch visibly different parts/supports of the state. A realistic neural system will have
+overlapping mechanisms.
+
+See:
+
+- `experiments/gate10b_pkas_unlabeled_regimes.py`
+- `results/gate10b_pkas_unlabeled_summary.json`
+- `docs/GATE10B_PKAS_UNLABELED_RESULT.md`
+
+---
+
 ## What comes next
 
-### G10B — remove the crutches
+### G10C — recover policy, not just physics
 
-Mix free dynamics, growth and pruning transitions into an unlabeled stream and ask the
-decoder to discover the regimes before fitting equations.
+The historical SAT wrapper gives us a much sharper target.
 
-Then move upward into the SAT adapter and ask whether black-box intervention traces can
-recover the **policy**, including the historical sign-selection bug that manual source
-inspection found.
+Manual source inspection found that the adapter can select a variable from one literal
+while taking the desired Boolean sign from **the first literal of the clause**.
+
+The next decoder should not read that source.
+
+Give it SAT state/intervention traces and ask which executable policy predicts:
+
+```text
+which clause is acted on
+which variable is selected
+which target phase is applied
+```
+
+The kill test is specific:
+
+> can black-box behavioral decoding recover the historical sign-selection mismatch rather
+> than merely fit the low-level oscillator equations?
+
+That would move the project from **equation recovery** toward **program/policy recovery and
+bug discovery**.
 
 A second high-value branch remains genuine delayed-generalization / modular-addition
 grokking: decode the final mechanism, then ask whether a causal "distance to
