@@ -1,0 +1,112 @@
+{
+  "experiment": "Gate 10C P-KAS SAT policy recovery",
+  "execution_note": "Five local seeds using the committed Gate-10C protocol.",
+  "decoder_access": "unsatisfied-clause context plus observed acted-on clause index, selected variable, and target phase; hidden adapter source is not used by decoder",
+  "ground_truth_for_posthoc_scoring_only": {
+    "clause_selection": "uniform subset without replacement, up to 10",
+    "variable_selection": "uniform literal within selected clause",
+    "target_rule": "positive target iff clause[0] > 0",
+    "historical_mismatch": "selected variable can come from a different literal than the literal whose sign sets the target"
+  },
+  "summary": {
+    "selected_policy": [
+      "clause[0] sign",
+      "clause[0] sign",
+      "clause[0] sign",
+      "clause[0] sign",
+      "clause[0] sign"
+    ],
+    "candidate_accuracy_mean": {
+      "clause[0] sign": 1.0,
+      "clause[1] sign": 0.49988666666666665,
+      "clause[2] sign": 0.50108,
+      "selected literal sign": 0.6687266666666667,
+      "majority literal sign": 0.7497133333333335,
+      "constant positive": 0.5004666666666666,
+      "constant negative": 0.4995333333333333
+    },
+    "mean_selected_literal_position_frequency": [
+      0.33452,
+      0.3320066666666667,
+      0.3334733333333333
+    ],
+    "mean_max_clause_inclusion_deviation_from_uniform": 0.018188888888888876,
+    "duplicate_clause_selection_rate": 0.0,
+    "counterfactual_selected_nonfirst_literal_flip_target_unchanged": 1.0,
+    "counterfactual_first_literal_flip_target_changes": 1.0,
+    "mean_blackbox_queries_for_three_conditioned_actions": 9.185999999999998
+  },
+  "per_seed": [
+    {
+      "seed": 0,
+      "max_clause_inclusion_deviation": 0.018555555555555547,
+      "literal_position_frequency": [0.3315, 0.33663333333333334, 0.33186666666666664],
+      "target_policy_accuracy": {
+        "clause[0] sign": 1.0,
+        "selected literal sign": 0.6700333333333334,
+        "majority literal sign": 0.7496333333333334
+      },
+      "selected_nonfirst_flip_unchanged": 1.0,
+      "first_literal_flip_changes": 1.0
+    },
+    {
+      "seed": 1,
+      "max_clause_inclusion_deviation": 0.030194444444444413,
+      "literal_position_frequency": [0.3358, 0.33086666666666664, 0.3333333333333333],
+      "target_policy_accuracy": {
+        "clause[0] sign": 1.0,
+        "selected literal sign": 0.6665333333333333,
+        "majority literal sign": 0.747
+      },
+      "selected_nonfirst_flip_unchanged": 1.0,
+      "first_literal_flip_changes": 1.0
+    },
+    {
+      "seed": 2,
+      "max_clause_inclusion_deviation": 0.015694444444444455,
+      "literal_position_frequency": [0.33186666666666664, 0.33166666666666667, 0.3364666666666667],
+      "target_policy_accuracy": {
+        "clause[0] sign": 1.0,
+        "selected literal sign": 0.6691,
+        "majority literal sign": 0.7513666666666666
+      },
+      "selected_nonfirst_flip_unchanged": 1.0,
+      "first_literal_flip_changes": 1.0
+    },
+    {
+      "seed": 3,
+      "max_clause_inclusion_deviation": 0.014305555555555571,
+      "literal_position_frequency": [0.33736666666666665, 0.3325666666666667, 0.3300666666666667],
+      "target_policy_accuracy": {
+        "clause[0] sign": 1.0,
+        "selected literal sign": 0.6699666666666667,
+        "majority literal sign": 0.7496666666666667
+      },
+      "selected_nonfirst_flip_unchanged": 1.0,
+      "first_literal_flip_changes": 1.0
+    },
+    {
+      "seed": 4,
+      "max_clause_inclusion_deviation": 0.012194444444444397,
+      "literal_position_frequency": [0.3360666666666667, 0.3283, 0.33563333333333334],
+      "target_policy_accuracy": {
+        "clause[0] sign": 1.0,
+        "selected literal sign": 0.668,
+        "majority literal sign": 0.7509
+      },
+      "selected_nonfirst_flip_unchanged": 1.0,
+      "first_literal_flip_changes": 1.0
+    }
+  ],
+  "decoded_policy": {
+    "clause_choice": "choose 10 distinct unsatisfied clauses with approximately uniform inclusion probability when at least 10 are available",
+    "variable_choice": "choose one of the three literals in the selected clause approximately uniformly, then intervene on that literal's variable",
+    "target_rule": "target positive iff the FIRST literal of the selected clause is positive",
+    "bug_receipt": "target sign is not tied to the selected literal. On controlled counterfactuals, flipping a selected non-first literal leaves the target unchanged 100% of the time, while flipping clause[0] changes the target 100% of the time."
+  },
+  "interpretation": {
+    "positive": "The black-box policy decoder recovered the historical sign-selection mismatch without using the SAT adapter source. This crosses from low-level equation fitting into compact policy/program recovery with a causal bug test.",
+    "scope_limit": "The acted-on clause index is observed. The decoder is not yet inferring latent clause identity solely from downstream phase/weight traces, and it is not reconstructing the whole SAT solve loop from raw trajectories.",
+    "next": "Gate 10D should remove the observed clause index and infer which constraint was acted on from the downstream structural trace, then assemble a compact end-to-end policy description."
+  }
+}
