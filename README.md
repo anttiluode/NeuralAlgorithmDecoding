@@ -484,17 +484,155 @@ See `experiments/gate4_parity_fsm.py` and `results/gate4_summary.json`.
 
 ## What comes next
 
-### G5 — column addition
+# Gate 5 — from addition GRU to an actual arithmetic program
 
-Train a recurrent or transformer model on addition. Attempt to recover an executable description containing the functional equivalents of:
+This is the first result in the repo that really looks like **neural computation -> causal abstraction -> executable code**.
+
+A 16-D GRU receives two decimal digits at a time, least-significant column first, and emits the corresponding digit of their sum.
+
+It is trained only on **8-column sequences**.
+
+The true compact algorithm requires one hidden carry bit, but the decoder is never given carry labels.
+
+## The first decoder failed
+
+The obvious Gate-4 trick was tried first:
 
 ```text
-sum = a + b + carry
-digit = sum mod 10
-carry_next = floor(sum / 10)
+hidden states
+   ->
+Euclidean k-means
+   ->
+cluster centroids
+   ->
+intervene on centroids
 ```
 
-The strong test is whether the extracted program systematically generalizes to lengths beyond the neural training regime.
+That failed badly even though the neural network itself was almost perfect.
+
+The centroids were not legitimate causal states. The GRU retained nuisance geometry from recent digit inputs, so nearby / averaged hidden vectors did not mean "same computation."
+
+That failure changes the definition of state.
+
+## Causal response equivalence
+
+For each actual observed hidden state `h`, Gate 5 asks the neural network a counterfactual question:
+
+> **What would you output if each of the 100 possible digit pairs arrived next?**
+
+So every hidden state gets a 100-input intervention signature:
+
+```text
+h
+ |
+ +-- (0,0) -> ?
+ +-- (0,1) -> ?
+ +-- ...
+ +-- (9,9) -> ?
+```
+
+Hidden states are grouped by **what they do under interventions**, not by where they sit geometrically.
+
+That immediately exposes two causal classes.
+
+Five seeds:
+
+```text
+discovered causal state count:     2 2 2 2 2
+mean signature consistency:        0.999909
+mean output-table consistency:     0.999938
+transition consistency:            1.000000
+```
+
+A small automatically chosen set of diagnostic interventions is then enough to classify successor states, producing a complete two-state Mealy transducer.
+
+## Then compress the transducer into mathematics
+
+At this point we have a 2-state × 100-input transition/output table.
+
+The decoder is still not told "decimal carry."
+
+It searches a tiny candidate language:
+
+- base `B` from 2 through 16;
+- either assignment of the two abstract states to carry values 0 and 1;
+- candidate law:
+
+```text
+total = a + b + carry
+digit = total % B
+carry_next = int(total >= B)
+```
+
+Across all five seeds it discovers:
+
+```text
+B = 10
+mismatches = 0
+```
+
+The abstract state names flip on different seeds, as they should. The inferred **carry semantics do not**.
+
+So the final extracted program is:
+
+```python
+total = a + b + carry
+digit = total % 10
+carry = int(total >= 10)
+```
+
+## Run the extracted program beyond the neural training horizon
+
+The GRU was trained on length 8.
+
+Test length is 256.
+
+```text
+neural long-sequence accuracy      0.999890
+decoded transducer accuracy        1.000000
+decoded program/table fidelity     0.999890
+```
+
+The decoded discrete machine is perfect on the long test even where the fuzzy neural approximation makes a few errors.
+
+## Causal intervention
+
+Finally, replace the running GRU hidden state with an **actual observed hidden state from the opposite discovered causal class** and continue the same digit suffix.
+
+The neural computation follows the injected carry-state prediction:
+
+```text
+first-step intervention fidelity   1.000000
+full suffix fidelity               0.999951
+```
+
+That gives the complete chain:
+
+```text
+16-D recurrent neural circuit
+       ->
+counterfactual response signatures
+       ->
+2 causal equivalence classes
+       ->
+finite-state transducer
+       ->
+symbolic compression
+       ->
+decimal carry program
+       ->
+hidden-state intervention agrees
+```
+
+This is much closer to the long-term target than "neuron 7 correlates with carry."
+
+It extracts **what the circuit computes**, and then compresses that computation into executable mathematics.
+
+See `experiments/gate5_addition_causal_decode.py` and `results/gate5_summary.json`.
+
+---
+
+## What comes next
 
 ### G6 — P-KAS as a known mechanistic animal
 
