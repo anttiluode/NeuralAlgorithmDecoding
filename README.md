@@ -175,42 +175,152 @@ See `results/gate0_summary.json`.
 
 ---
 
-## What comes next
+# Gate 1 — film the birth of the mathematics
 
-### G1 — circuit formation during training
+`experiments/gate1_circuit_formation.py` keeps the same model organism but inspects checkpoints through training.
 
-Do not inspect only the final network.
+At every checkpoint it measures:
 
-Save checkpoints and ask when the mathematical operation becomes visible:
+- task NMSE;
+- error of the decoded affine operator against the known inverse;
+- input-to-output Jacobians and how much they vary with input;
+- each hidden unit's rank-1 contribution to the mean Jacobian;
+- how many units are needed to reconstruct that Jacobian;
+- neural versus decoded-math behavior at 2x amplitude.
+
+Five-seed receipt:
+
+| event | median training step |
+| --- | ---: |
+| network reaches <1% ID NMSE | `200` |
+| decoded operator reaches <5% relative error | `200` |
+| decoded operator reaches <1% relative error | `300` |
+| decoded math beats neural 2x-OOD error by >10x | `200` |
+| Jacobian becomes <5% input-variable | `750` |
+
+At the end of training:
 
 ```text
-random network
-    ->
-partial approximation
-    ->
-distributed circuit forms
-    ->
-effective operator stabilizes
-    ->
-cleanup / redundancy changes
+network 2x-OOD NMSE             4.08e-3
+decoded affine 2x-OOD NMSE      6.27e-6
+mean advantage                  ~1072x
+
+effective hidden-unit participation   10.26 / 16
+units for 10% Jacobian reconstruction 11.2 / 16
+units for 5% Jacobian reconstruction  12.8 / 16
 ```
 
-Track:
+So the first developmental picture is not:
 
-- task loss;
-- distance of decoded operator from the known mathematics;
-- Jacobian spectrum;
-- hidden-unit causal importance;
-- smallest faithful circuit;
-- OOD gap between neural approximation and decoded math.
+```text
+one special neuron becomes "the inverse matrix"
+```
 
-This directly tests the intuition that a circuit gradually **forms around a computation** during learning.
+It is closer to:
 
-### G2 — blind demixing
+```text
+many nonlinear units co-adapt
+        ->
+a simple operator becomes visible in their collective effect
+        ->
+the collective implementation remains distributed
+```
 
-Remove source labels from the learner. Train with independence / temporal structure, then ask whether the decoder can recover the learned demixing law without being given the true matrix.
+The compact mathematics becomes recoverable early, while the neural implementation never collapses to a tiny obvious subcircuit.
 
-### G3 — temporal algorithm
+That is exactly the distinction this repo cares about.
+
+See `results/gate1_summary.json`.
+
+---
+
+# Gate 2 — stop telling the decoder "fit a matrix"
+
+Gate 0 and Gate 1 handed the decoder the answer family: affine maps.
+
+`experiments/gate2_family_selection.py` weakens that assumption. The decoder is given a small candidate language of polynomial programs of degree 0, 1, 2, or 3 and sees only black-box `x -> neural output` queries.
+
+It chooses the **smallest** candidate that reproduces held-out neural behavior within 1% NMSE.
+
+Two positive-control organisms are trained:
+
+```text
+L: genuinely linear 2-D law
+Q: genuinely quadratic 2-D law
+```
+
+The hidden true equations are used only after model-family selection for scoring.
+
+Five seeds:
+
+```text
+linear organism:
+  chosen degree     1 1 1 1 1
+
+quadratic organism:
+  chosen degree     2 2 2 2 2
+```
+
+OOD against the hidden generating law:
+
+| organism | neural 2x-OOD NMSE | decoded program 2x-OOD NMSE | mean neural/decoded error ratio |
+| --- | ---: | ---: | ---: |
+| linear | `2.73e-3` | `8.01e-6` | `806x` |
+| quadratic | `4.58e-2` | `1.30e-3` | `255x` |
+
+This is still a calibration. The correct answer is already representable in the supplied polynomial language.
+
+But we have moved one step:
+
+```text
+"fit this matrix"
+      ->
+"which compact family best explains this neural computation?"
+```
+
+See `results/gate2_summary.json`.
+
+---
+
+## A useful failure immediately after Gate 2
+
+I also tried the obvious version of the future **active falsifier**:
+
+> fit linear and quadratic rival explanations, then query the neural black box where they disagree most.
+
+It failed.
+
+On three development seeds with a 100x cumulative-error rejection criterion:
+
+```text
+random querying:
+  rejected the wrong linear model in 1 query on all 3 seeds
+
+naive maximum-disagreement querying:
+  seed 0: 3 queries
+  seed 1: not rejected within 100
+  seed 2: not rejected within 100
+```
+
+A bootstrap uncertainty-aware variant improved this to `1, 1, >100`, but was still not robust.
+
+The failure is informative: **maximum disagreement is not automatically maximum information.** It can seek points where one or both candidate models are poorly estimated rather than points that cleanly discriminate mechanisms.
+
+So the active-experiment stage needs a proper reliability / expected-information criterion rather than the slogan "ask where they disagree."
+
+That route is paused rather than tuned until it wins against random querying.
+
+---
+
+## What comes next
+
+### G3 — blind demixing / coordinate discovery
+
+Remove source labels from the learner. Train with independence or temporal structure, then ask whether the decoder can first discover a useful coordinate system and only then recover the learned demixing law.
+
+This is where the Tuesday / ICA / IVA lineage should finally earn a direct role.
+
+### G4 — temporal algorithm
 
 Use a small recurrent network whose correct solution requires state: delay, carry, parity, or a simple source with memory.
 
@@ -224,7 +334,7 @@ small causal state variable
 state transition equation / finite-state machine
 ```
 
-### G4 — column addition
+### G5 — column addition
 
 Train a recurrent or transformer model on addition. Attempt to recover an executable description containing the functional equivalents of:
 
@@ -236,7 +346,7 @@ carry_next = floor(sum / 10)
 
 The strong test is whether the extracted program systematically generalizes to lengths beyond the neural training regime.
 
-### G5 — P-KAS as a known mechanistic animal
+### G6 — P-KAS as a known mechanistic animal
 
 P-KAS already has a manual decomposition in `pkas_doors.py`: symmetric learned coupling, explicit twist, clause pull, pruning, and falsifiable ablations.
 
