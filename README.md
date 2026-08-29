@@ -398,19 +398,91 @@ See `experiments/gate3_blind_temporal_demix.py` and `results/gate3_summary.json`
 
 ## What comes next
 
-### G4 — temporal algorithm
+# Gate 4 — continuous recurrent state -> minimal executable FSM
 
-Use a small recurrent network whose correct solution requires state: delay, carry, parity, or a simple source with memory.
+The next organism is an 8-dimensional GRU trained on running parity.
 
-Try to decode:
+Training sequences are only 24 bits long.
+
+The decoder is not given the parity state. It sees:
+
+- input bits;
+- continuous 8-D hidden states;
+- the neural network's own output predictions.
+
+A naive hidden-state clustering is **not** enough. On different seeds the same two-state computation appears as 2, 3, or 4 geometric clusters.
+
+That turned into an important distinction:
+
+> **geometric states are not necessarily computational states.**
+
+So Gate 4 deliberately overclusters the hidden trajectory, builds an empirical transition graph, and then merges states that are behaviorally equivalent: same output and transitions into equivalent future states.
+
+That is ordinary automaton minimization applied after neural-state observation.
+
+Five seeds:
 
 ```text
-continuous hidden state
-      ->
-small causal state variable
-      ->
-state transition equation / finite-state machine
+raw hidden-state clusters selected:   4, 3, 2, 2, 4
+minimal causal states recovered:      2, 2, 2, 2, 2
+transition consistency:               1.0 on every seed
+output consistency:                   1.0 on every seed
 ```
+
+Every recovered machine, up to state-name permutation, is:
+
+```text
+             input 0     input 1
+state 0   -> state 0   -> state 1
+state 1   -> state 1   -> state 0
+```
+
+That is the parity algorithm.
+
+Then the extracted FSM is run on **1024-step sequences**, more than 40x the neural training horizon:
+
+```text
+neural accuracy vs true parity      1.000
+decoded FSM accuracy vs truth       1.000
+decoded FSM fidelity vs neural      1.000
+```
+
+The stronger test is causal.
+
+We take a running neural sequence, replace its 8-D hidden state with a representative hidden state from the **other decoded abstract state**, and continue the exact same suffix.
+
+The neural network then follows the state-swapped FSM prediction:
+
+```text
+first-step intervention fidelity     1.000
+full suffix intervention fidelity    1.000
+```
+
+across all five seeds.
+
+So Gate 4 gets much closer to the target than a cluster plot would:
+
+```text
+8-D fuzzy recurrent dynamics
+        ->
+several geometric hidden clusters
+        ->
+behavioral equivalence / state minimization
+        ->
+2-state causal machine
+        ->
+counterfactual hidden-state intervention
+        ->
+same future behavior
+```
+
+The extracted object is not merely correlated with parity. Swapping the proposed state changes the neural computation exactly as the decoded state machine predicts.
+
+See `experiments/gate4_parity_fsm.py` and `results/gate4_summary.json`.
+
+---
+
+## What comes next
 
 ### G5 — column addition
 
