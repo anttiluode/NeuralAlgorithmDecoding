@@ -30,6 +30,32 @@ small executable causal surrogate
 
 The target is **not** an attention map, a neuron label, or a story about what a feature "means."
 
+<details>
+<summary><strong>Process note: why this slightly ridiculous repo exists</strong></summary>
+
+This did not begin as a clean research program. It began with the recurring thought that
+neural systems learn complicated transformations in distributed form, while a human may
+later be able to describe the useful computation much more compactly.
+
+So the working inversion became:
+
+```text
+let the neural machine learn however it learns
+        ->
+experiment on the trained thing
+        ->
+recover the smallest causal executable description we can earn
+```
+
+The route here has included bad ideas, over-strong interpretations, old repos unexpectedly
+becoming useful again, and experiments that killed the prettier story. That mess is not a
+methodological virtue; it is simply the provenance. The protection is to preserve receipts,
+attackers and negative results.
+
+A longer note on the human/AI process is in [`docs/PROCESS_NOTE.md`](docs/PROCESS_NOTE.md).
+
+</details>
+
 The target is:
 
 > **A smaller executable model that agrees with the neural system on behavior and on declared interventions, generalizes where the neural approximation generalizes, and is simple enough for a human to inspect.**
