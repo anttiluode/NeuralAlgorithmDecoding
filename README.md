@@ -74,9 +74,10 @@ If you are arriving from outside the project, these are the useful checkpoints r
 | **10A** | labeled P-KAS core transitions | hidden phase/plasticity/pruning constants and equations recover from black-box experiments |
 | **10B** | **unlabeled** mixed P-KAS transitions | transition families separate without FREE/GROW/PRUNE labels; three hidden growth targets and the same core equations are recovered |
 | **10C** | P-KAS SAT intervention policy | black-box action traces recover the clause/variable/target policy and expose the historical target-sign mismatch by counterfactual tests |
+| **10D** | hidden P-KAS SAT clause identity | downstream W-change geometry identifies the hidden clause when possible and returns **NOT_IDENTIFIABLE** on deliberately aliased cases |
 
 The strongest current neural program-extraction result is Gate 5.  
-The latest policy-recovery result is Gate 10C.  
+The latest policy/identifiability result is Gate 10D.  
 Neither is evidence that arbitrary large neural networks can already be decompiled.
 
 ---
@@ -1220,35 +1221,121 @@ See:
 
 ---
 
+# Gate 10D — identify the hidden clause, or refuse
+
+Gate 10C still exposed which clause was acted on.
+
+Gate 10D hides it.
+
+The decoder receives:
+
+```text
+all current clauses
+selected variable
+target phase
+W before
+W after
+```
+
+and reuses the previously decoded Gate-10C rule:
+
+```text
+target sign = sign of clause[0]
+```
+
+The downstream pair-growth trace reveals the three-variable set of the selected clause:
+
+```text
+(a,b)
+(a,c)
+(b,c)
+   ->
+{a,b,c}
+```
+
+Candidate clauses must match that variable set and the observed target sign.
+
+In ordinary unique cases, the clause is recovered perfectly.
+
+But every test context deliberately contains alias pairs with:
+
+```text
+same absolute variables
+same clause[0] sign
+different non-first literal signs
+```
+
+Under the declared observations those clauses are genuinely indistinguishable.
+
+Five seeds, 25,000 hidden-clause actions total:
+
+```text
+true clause always inside returned candidate set       100%
+
+uniquely identifiable actions                          66.6%
+accuracy when decoder says IDENTIFIED                  100%
+
+deliberately aliased / NOT_IDENTIFIABLE actions        33.4%
+correct identifiable-vs-aliased classification         100%
+```
+
+The structural W trace matters:
+
+```text
+without W trace:
+  mean candidate set       2.576
+  uniquely identifiable    22.2%
+
+with W trace:
+  mean candidate set       1.334
+  uniquely identifiable    66.6%
+```
+
+So the result is not "the decoder always finds the hidden cause."
+
+The result is healthier:
+
+> **it identifies the cause when the observation family supports a unique answer and
+> refuses to invent one when two causes are observationally equivalent.**
+
+That is the TransientWaveCompiler identifiability lesson finally embedded in the
+decompiler itself.
+
+See:
+
+- `experiments/gate10d_pkas_clause_identifiability.py`
+- `results/gate10d_pkas_clause_identifiability_summary.json`
+- `docs/GATE10D_PKAS_CLAUSE_IDENTIFIABILITY.md`
+
+---
+
 ## What comes next
 
-### G10D — remove observed clause identity
+The next P-KAS step should make identifiability **graded rather than exact**.
 
-Give the decoder only:
+Add:
 
-```text
-all unsatisfied clauses
-state before
-state after
-observed stamped node
-observed target phase
-downstream W changes
-```
+- partially hidden W changes;
+- observation noise;
+- overlapping clause signatures;
+- nuisance degrees of freedom.
 
-and ask which clause must have generated the transition.
+Then use `nad/identifiability.py` to ask whether a candidate explanation contains
+response directions that survive projection against competing/nuisance explanations.
 
-If several clauses are equally compatible, the decoder should return:
+That would turn:
 
 ```text
-NOT IDENTIFIABLE
+IDENTIFIED / NOT_IDENTIFIABLE
 ```
 
-rather than inventing one.
+into something like:
 
-That would join the P-KAS policy work to the old TransientWaveCompiler lesson:
-
-> **an explanation is only earned to the level that the available experiment can
-> distinguish it from alternatives.**
+```text
+novel identifiable fraction eta
+confidence under current intervention family
+best next experiment
+```
 
 A second high-value branch remains genuine delayed-generalization / modular-addition
 grokking: decode the final mechanism, then ask whether a causal "distance to
