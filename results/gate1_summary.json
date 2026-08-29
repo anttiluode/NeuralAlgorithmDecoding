@@ -1,0 +1,24 @@
+{
+  "seeds": [0, 1, 2, 3, 4],
+  "formation_steps": {
+    "operator_5pct_step": {"values": [300, 200, 200, 200, 200], "median": 200.0, "mean": 220.0},
+    "operator_1pct_step": {"values": [300, 300, 200, 300, 300], "median": 300.0, "mean": 280.0},
+    "behavior_1pct_nmse_step": {"values": [200, 200, 150, 200, 200], "median": 200.0, "mean": 190.0},
+    "behavior_0p1pct_nmse_step": {"values": [1000, 1500, 500, 3000, 1000], "median": 1000.0, "mean": 1400.0},
+    "locally_linear_step": {"values": [750, 750, 150, 750, 1500], "median": 750.0, "mean": 780.0},
+    "math_beats_neural_ood_10x_step": {"values": [200, 200, 150, 150, 200], "median": 200.0, "mean": 180.0}
+  },
+  "final": {
+    "network_id_nmse": {"mean": 0.00015770544996485114, "std": 0.00011792819730001117},
+    "network_ood2x_nmse": {"mean": 0.004078357620164752, "std": 0.0009275170834507781},
+    "decoded_affine_ood2x_nmse": {"mean": 0.000006267412345550838, "std": 0.000004414853027891391},
+    "decoded_matrix_rel_error": {"mean": 0.001458459673449397, "std": 0.0009631812900144791},
+    "jacobian_mean_rel_error": {"mean": 0.004285366740077734, "std": 0.0017940642247924927},
+    "jacobian_input_variation": {"mean": 0.020353076234459876, "std": 0.002900282033728285},
+    "jacobian_unit_participation_ratio": {"values": [9.352391242980957, 11.530810356140137, 12.497016906738281, 9.60517692565918, 8.294133186340332], "mean": 10.255905723571777},
+    "jacobian_cancellation_ratio": {"values": [1.3088493347167969, 1.3625465631484985, 1.4861342906951904, 1.3977266550064087, 1.4187695980072021], "mean": 1.3948052883148194},
+    "greedy_units_for_10pct_jacobian": {"values": [11, 11, 11, 12, 11], "mean": 11.2},
+    "greedy_units_for_5pct_jacobian": {"values": [13, 13, 13, 13, 12], "mean": 12.8},
+    "ood_advantage_ratio_network_over_math": {"values": [811.0568142307552, 543.5676091715765, 2869.1657087810613, 295.73834721186006, 842.4177401097437], "mean": 1072.3892439009992}
+  }
+}
