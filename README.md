@@ -932,17 +932,97 @@ See:
 
 ---
 
+# Gate 10A — turn the P-KAS autopsy into an automatic equation-recovery test
+
+P-KAS was originally attractive as a system that seemed to "grow a solver."
+
+The later audit weakened that interpretation because the problem adapters supplied much
+of the solving grammar. But that makes the core a useful known organism for the decoder.
+
+Gate 10A seals a reimplementation of the historical P-KAS core behind an experiment
+interface. The decoder gets only before/after states, timestamps and permitted
+interventions; it does not read the hidden constants.
+
+It automatically recovers:
+
+```text
+FREE PHASE DYNAMICS
+
+dphi_i/dt
+  ~= K * sum_j W_ij sin(phi_j - phi_i)
+     + bounded residual
+
+true K               0.870000
+decoded mean K       0.869945
+
+
+PAIR GROWTH
+
+delta W_ij = delta W_ji
+
+delta_w
+  ~= eta * exp(
+       -0.5 * ((phase_error-target)/sigma)^2
+     )
+
+true eta             0.045
+decoded eta          0.045
+
+true sigma/pi        0.300
+decoded sigma/pi     0.300
+
+fit R^2              1.000
+
+
+PRUNING
+
+W <- (1-r) W
+if W < threshold:
+    W = 0
+
+true r               0.005
+decoded r            0.005
+
+true threshold       0.005
+decoded threshold    0.00500000000002
+```
+
+The prune threshold is found by **active binary-search intervention**, not by reading the
+source constant.
+
+So hundreds of observed transitions compress back into a few executable equations.
+
+This is still deliberately easy:
+
+- operation boundaries are labeled;
+- the growth target relation is available as an intervention input;
+- every relevant state variable is visible;
+- the equation language is small.
+
+But it converts the old manual P-KAS-Doors style decomposition into an automatic receipt.
+
+See:
+
+- `experiments/gate10a_pkas_blackbox_equations.py`
+- `results/gate10a_pkas_blackbox_summary.json`
+- `docs/GATE10A_PKAS_BLACKBOX_RESULT.md`
+
+---
+
 ## What comes next
 
-### G10 — P-KAS as a known mechanistic animal
+### G10B — remove the crutches
 
-P-KAS already has a manual decomposition in `pkas_doors.py`: symmetric learned coupling, explicit twist, clause pull, pruning, and falsifiable ablations.
+Mix free dynamics, growth and pruning transitions into an unlabeled stream and ask the
+decoder to discover the regimes before fitting equations.
 
-Hide the source code from the decoder and ask whether trajectories + interventions are enough to rediscover that decomposition.
+Then move upward into the SAT adapter and ask whether black-box intervention traces can
+recover the **policy**, including the historical sign-selection bug that manual source
+inspection found.
 
-A second high-value branch is genuine delayed-generalization / modular-addition grokking:
-decode the final mechanism, then ask whether a causal "distance to generalization" can be
-measured before the visible test-accuracy transition.
+A second high-value branch remains genuine delayed-generalization / modular-addition
+grokking: decode the final mechanism, then ask whether a causal "distance to
+generalization" can be measured before the visible test-accuracy transition.
 
 ---
 
