@@ -1,0 +1,52 @@
+{
+  "seeds": [0, 1, 2, 3, 4],
+  "steps": 2000,
+  "organism": "Gate-5 decimal-addition GRU, hidden=16",
+  "state_labels": "discovered from full 100-input counterfactual response signatures; no carry labels used",
+  "metrics": {
+    "signature_exact_fraction": {
+      "values": [1.0, 1.0, 0.99072265625, 0.978515625, 0.99951171875],
+      "mean": 0.99375,
+      "std": 0.008397301885431899
+    },
+    "linear_geometry_probe_accuracy": {
+      "values": [1.0, 1.0, 1.0, 1.0, 1.0],
+      "mean": 1.0,
+      "std": 0.0
+    },
+    "median_boundary_margin": {
+      "values": [0.7881099109666588, 0.7465085636243756, 0.6915871275316549, 0.6785777122564445, 0.7044564021174866],
+      "mean": 0.721847943299324,
+      "std": 0.04022260589288518
+    },
+    "half_margin_axis_flip_rate": {
+      "values": [0.0, 0.0, 0.0, 0.0, 0.0],
+      "mean": 0.0,
+      "std": 0.0
+    },
+    "cross_boundary_axis_flip_rate": {
+      "values": [0.9609375, 0.9140625, 0.96875, 0.9140625, 0.9375],
+      "mean": 0.9390625,
+      "std": 0.022857404434887176
+    },
+    "matched_orthogonal_flip_rate": {
+      "values": [0.0, 0.0, 0.0, 0.0, 0.0],
+      "mean": 0.0,
+      "std": 0.0
+    },
+    "cross_boundary_signature_hamming_to_nearest_class": {
+      "values": [0.17921875, 0.121953125, 0.190703125, 0.348046875, 0.17484375],
+      "mean": 0.202953125,
+      "std": 0.07631083318716124
+    },
+    "matched_orthogonal_signature_hamming_to_nearest_class": {
+      "values": [0.003515625, 0.00015625, 0.00140625, 0.003515625, 0.000625],
+      "mean": 0.00184375,
+      "std": 0.0014223041934656594
+    }
+  },
+  "interpretation": {
+    "positive": "The two intervention-defined computational states occupy a strongly organized raw hidden-state geometry. A learned boundary-normal perturbation changes causal response class at matched norm while an orthogonal perturbation does not.",
+    "important_limit": "Crossing the linear geometric boundary often lands in a fuzzy off-manifold response state (about 20% mean Hamming distance to the nearest canonical response signature). The linear axis identifies a causally sensitive direction, not a clean generative coordinate for valid carry states."
+  }
+}
